@@ -1,5 +1,6 @@
 $email = Read-Host "Enter Github email"
 ssh-keygen -t ed25519 -C $email
+Write-Host  ">Adding key to SSH agent" -ForegroundColor Cyan
 ssh-add "C:/Users/$($Env:UserName)/.ssh/id_ed25519"
 git config --global gpg.format ssh
 Write-Host  ">Enabled SSH for Git globally" -ForegroundColor Cyan
