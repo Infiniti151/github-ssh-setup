@@ -1,7 +1,9 @@
 # github-ssh-setup
-Sets up commit signing for Github in Linux
+
+Sets up commit signing for Github in Linux/Windows
 
 This script does the following:
+
 1. Creates a new SSH key
 2. Adds the key to keyring
 3. Enables SSH for Git globally
