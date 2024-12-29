@@ -19,8 +19,8 @@ addKeyToAgent() {
 
 echo "Enter Github email:"
 read email
-ssh_public_key=$(find ~/.ssh -type f -name "*ed25519.pub")
-if [[ ! -z $ssh_public_key ]] && [ "$(awk '{print $3}' $ssh_public_key)" = $email ];then 
+readarray -t ssh_keys < <(find ~/.ssh -type f -name "*ed25519.pub")
+if [[ ! -z "${ssh_keys[@]}" ]] && [ "$(awk '{print $3}' $ssh_public_key)" = $email ];then 
     echo "Existing key ($ssh_public_key) for email $email already exists. Do you want to use it for Github signing? (y/n)";
     read a
     if [ $a = "y" ];then
