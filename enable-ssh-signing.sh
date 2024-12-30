@@ -1,5 +1,15 @@
 #!/usr/bin/bash
 
+getKey() {
+	for i in "${ssh_keys[@]}"
+	do
+		if [[ $(awk '{print $1}' $i) = "ssh-ed25519" && $(awk '{print $3}' $i) = $1 ]];then
+			ssh_public_key=$i
+			return 1
+		fi
+	done
+}
+
 createNewKey () {
     echo -e "\033[0;36m>Creating new SSH key\033[0m"
     if [ -f ~/.ssh/id_ed25519 ];then
@@ -19,11 +29,12 @@ addKeyToAgent() {
 
 echo "Enter Github email:"
 read email
-ssh_public_key=$(find ~/.ssh -type f -name "*ed25519.pub")
-if [[ ! -z $ssh_public_key ]] && [ "$(awk '{print $3}' $ssh_public_key)" = $email ];then 
+readarray -t ssh_keys < <(find ~/.ssh -type f -name "*.pub")
+getKey $email
+if [[ ! -z $ssh_public_key ]];then 
     echo "Existing key ($ssh_public_key) for email $email already exists. Do you want to use it for Github signing? (y/n)";
     read a
-    if [ $a = "y" ];then
+    if [[ $a = "y" || $a = "Y" ]];then
         echo -e "\033[0;36m>Using existing SSH key\033[0m"
         if echo "$(ssh-add -L)" | grep -q "$(cat $ssh_public_key)"; then 
             echo -e "\033[0;36m>Key already added to ssh-agent\033[0m" 
